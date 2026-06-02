@@ -1,0 +1,293 @@
+/* =============================================
+   MOTOBLITZ GP — Global Base Styles
+   ============================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+:root {
+  --clr-bg: #07070e;
+  --clr-surface: #0d0d1a;
+  --clr-surface2: #13132a;
+  --clr-border: rgba(255,255,255,0.08);
+  --clr-accent: #ff3300;
+  --clr-accent2: #ff7700;
+  --clr-accent3: #00d4ff;
+  --clr-gold: #ffd700;
+  --clr-silver: #c0c0c0;
+  --clr-bronze: #cd7f32;
+  --clr-text: #f0f0f5;
+  --clr-text-dim: rgba(240,240,245,0.5);
+  --clr-success: #00e676;
+  --clr-danger: #ff1744;
+  --font-display: 'Orbitron', sans-serif;
+  --font-ui: 'Rajdhani', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-glow: 0 0 20px rgba(255,51,0,0.4);
+  --shadow-glow-blue: 0 0 20px rgba(0,212,255,0.4);
+  --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+#game-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+}
+
+/* ─── LOADING SCREEN ─── */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--clr-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  transition: opacity 0.8s ease;
+}
+
+#loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-logo {
+  text-align: center;
+  animation: logoReveal 1s ease forwards;
+}
+
+@keyframes logoReveal {
+  from { opacity: 0; transform: translateY(-30px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.loading-logo .logo-main {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  color: var(--clr-text);
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.loading-logo .logo-main span {
+  color: var(--clr-accent);
+  text-shadow: 0 0 30px rgba(255,51,0,0.8), 0 0 60px rgba(255,51,0,0.4);
+}
+
+.loading-logo .logo-sub {
+  font-family: var(--font-display);
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  letter-spacing: 0.4em;
+  color: var(--clr-accent3);
+  margin-top: 0.5rem;
+  opacity: 0.8;
+}
+
+.loading-bar-wrap {
+  position: relative;
+  width: min(400px, 80vw);
+  height: 4px;
+  background: var(--clr-surface2);
+  border-radius: 2px;
+  overflow: visible;
+}
+
+.loading-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--clr-accent), var(--clr-accent2));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.loading-bar::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  background: var(--clr-accent2);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--clr-accent2);
+}
+
+.loading-bar-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, transparent, rgba(255,119,0,0.3));
+  pointer-events: none;
+}
+
+.loading-text {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--clr-text-dim);
+  letter-spacing: 0.1em;
+}
+
+.loading-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.loading-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--clr-accent);
+  border-radius: 50%;
+  animation: particleFloat linear infinite;
+  opacity: 0;
+}
+
+@keyframes particleFloat {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-100px) scale(1); }
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--clr-surface); }
+::-webkit-scrollbar-thumb { background: var(--clr-accent); border-radius: 2px; }
+
+/* ─── BUTTONS BASE ─── */
+button {
+  font-family: var(--font-display);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+select, input {
+  font-family: var(--font-ui);
+  color: var(--clr-text);
+  background: var(--clr-surface2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  outline: none;
+}
+
+select {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--clr-surface2);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--clr-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--clr-accent);
+}
+
+/* ─── UTILITY ─── */
+.hidden { display: none !important; }
+.invisible { visibility: hidden; }
+
+.screen {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ─── TOGGLE SWITCH ─── */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--clr-surface2);
+  border-radius: 13px;
+  transition: 0.3s;
+  cursor: pointer;
+  border: 1px solid var(--clr-border);
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  left: 3px; top: 3px;
+  width: 18px; height: 18px;
+  background: var(--clr-text-dim);
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: rgba(255,51,0,0.2);
+  border-color: var(--clr-accent);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(24px);
+  background: var(--clr-accent);
+  box-shadow: 0 0 8px var(--clr-accent);
+}
+
+/* ─── GLOW EFFECTS ─── */
+.glow-red { text-shadow: 0 0 20px rgba(255,51,0,0.8); }
+.glow-blue { text-shadow: 0 0 20px rgba(0,212,255,0.8); }
+.glow-gold { text-shadow: 0 0 20px rgba(255,215,0,0.8); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 480px) {
+  :root { font-size: 14px; }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  :root { font-size: 12px; }
+}

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>MotoBlitz GP — Racing Legends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/menu.css">
+  <link rel="stylesheet" href="css/hud.css">
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="loading-logo">
+    <div class="logo-main">MOTO<span>BLITZ</span> GP</div>
+    <div class="logo-sub">RACING LEGENDS</div>
+  </div>
+  <div class="loading-bar-wrap">
+    <div class="loading-bar" id="loading-bar"></div>
+    <div class="loading-bar-glow"></div>
+  </div>
+  <div class="loading-text" id="loading-text">Initializing Engine...</div>
+  <div class="loading-particles" id="loading-particles"></div>
+</div>
+
+<!-- MAIN CANVAS -->
+<canvas id="game-canvas"></canvas>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MENU OVERLAY -->
+<!-- ═══════════════════════════════════════ -->
+<div id="menu-overlay" class="hidden">
+
+  <!-- MAIN MENU -->
+  <div id="screen-main" class="screen">
+    <div class="main-bg-gradient"></div>
+    <div class="menu-logo">
+      <div class="logo-icon">🏍️</div>
+      <div class="logo-text">MOTO<span>BLITZ</span> GP</div>
+      <div class="logo-sub">RACING LEGENDS 2025</div>
+      <div class="logo-divider"></div>
+    </div>
+    <nav class="main-nav">
+      <button class="menu-btn primary" data-action="quick-race">
+        <span class="btn-icon">⚡</span>
+        <span class="btn-label">QUICK RACE</span>
+        <span class="btn-arrow">›</span>
+      </button>
+      <button class="menu-btn" data-action="championship">
+        <span class="btn-icon">🏆</span>
+        <span class="btn-label">CHAMPIONSHIP</span>
+        <span class="btn-arrow">›</span>
+      </button>
+      <button class="menu-btn" data-action="time-trial">
+        <span class="btn-icon">⏱️</span>
+        <span class="btn-label">TIME TRIAL</span>
+        <span class="btn-arrow">›</span>
+      </button>
+      <button class="menu-btn" data-action="career">
+        <span class="btn-icon">🎯</span>
+        <span class="btn-label">CAREER MODE</span>
+        <span class="btn-arrow">›</span>
+      </button>
+      <button class="menu-btn" data-action="garage">
+        <span class="btn-icon">🔧</span>
+        <span class="btn-label">GARAGE</span>
+        <span class="btn-arrow">›</span>
+      </button>
+      <button class="menu-btn" data-action="settings">
+        <span class="btn-icon">⚙️</span>
+        <span class="btn-label">SETTINGS</span>
+        <span class="btn-arrow">›</span>
+      </button>
+    </nav>
+    <div class="player-coins-bar">
+      <span class="coins-icon">🪙</span>
+      <span class="coins-amount" id="menu-coins">0</span>
+      <span class="coins-label">COINS</span>
+    </div>
+    <div class="version-badge">v2.0 SEASON EDITION</div>
+  </div>
+
+  <!-- RIDER SELECT -->
+  <div id="screen-rider" class="screen hidden">
+    <div class="screen-header">
+      <button class="back-btn" data-back="main">‹</button>
+      <h2>SELECT RIDER</h2>
+      <div class="step-indicator"><span class="step active"></span><span class="step"></span><span class="step"></span></div>
+    </div>
+    <div class="riders-grid" id="riders-grid"></div>
+    <div class="rider-detail-panel" id="rider-detail">
+      <div class="rider-avatar-large" id="detail-avatar"></div>
+      <div class="rider-info-large">
+        <div class="rider-name-large" id="detail-name">Select a Rider</div>
+        <div class="rider-team-large" id="detail-team"></div>
+        <div class="rider-stats-bars" id="detail-stats"></div>
+      </div>
+    </div>
+    <button class="next-btn" id="rider-next" disabled>CHOOSE BIKE ›</button>
+  </div>
+
+  <!-- BIKE SELECT -->
+  <div id="screen-bike" class="screen hidden">
+    <div class="screen-header">
+      <button class="back-btn" data-back="rider">‹</button>
+      <h2>SELECT BIKE</h2>
+      <div class="step-indicator"><span class="step done"></span><span class="step active"></span><span class="step"></span></div>
+    </div>
+    <div class="bikes-list" id="bikes-list"></div>
+    <div class="bike-preview-3d" id="bike-preview">
+      <canvas id="bike-preview-canvas" width="300" height="200"></canvas>
+      <div class="bike-stats-panel" id="bike-stats"></div>
+    </div>
+    <button class="next-btn" id="bike-next" disabled>CHOOSE CIRCUIT ›</button>
+  </div>
+
+  <!-- CIRCUIT SELECT -->
+  <div id="screen-circuit" class="screen hidden">
+    <div class="screen-header">
+      <button class="back-btn" data-back="bike">‹</button>
+      <h2>SELECT CIRCUIT</h2>
+      <div class="step-indicator"><span class="step done"></span><span class="step done"></span><span class="step active"></span></div>
+    </div>
+    <div class="circuits-grid" id="circuits-grid"></div>
+    <div class="circuit-detail" id="circuit-detail">
+      <canvas class="circuit-map-canvas" id="circuit-preview-map" width="300" height="200"></canvas>
+      <div class="circuit-info-panel" id="circuit-info"></div>
+    </div>
+    <div class="race-options-row">
+      <div class="option-group">
+        <label>LAPS</label>
+        <select id="laps-select">
+          <option value="3">3 Laps</option>
+          <option value="5" selected>5 Laps</option>
+          <option value="10">10 Laps</option>
+          <option value="20">20 Laps</option>
+        </select>
+      </div>
+      <div class="option-group">
+        <label>DIFFICULTY</label>
+        <select id="difficulty-select">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+          <option value="extreme">Extreme</option>
+        </select>
+      </div>
+      <div class="option-group">
+        <label>WEATHER</label>
+        <select id="weather-select">
+          <option value="sunny">☀️ Sunny</option>
+          <option value="cloudy">☁️ Cloudy</option>
+          <option value="rain">🌧️ Rain</option>
+          <option value="dusk">🌅 Dusk</option>
+          <option value="night">🌙 Night</option>
+        </select>
+      </div>
+    </div>
+    <button class="next-btn race-btn" id="start-race-btn" disabled>START RACE 🚦</button>
+  </div>
+
+  <!-- GARAGE -->
+  <div id="screen-garage" class="screen hidden">
+    <div class="screen-header">
+      <button class="back-btn" data-back="main">‹</button>
+      <h2>🔧 GARAGE</h2>
+      <div class="coins-display"><span>🪙</span><span id="garage-coins">0</span></div>
+    </div>
+    <div class="garage-tabs">
+      <button class="tab-btn active" data-tab="upgrades">UPGRADES</button>
+      <button class="tab-btn" data-tab="shop">SHOP</button>
+    </div>
+    <div class="garage-content" id="garage-content"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="screen-settings" class="screen hidden">
+    <div class="screen-header">
+      <button class="back-btn" data-back="main">‹</button>
+      <h2>⚙️ SETTINGS</h2>
+    </div>
+    <div class="settings-list">
+      <div class="setting-item">
+        <label>Music Volume</label>
+        <input type="range" id="music-vol" min="0" max="100" value="60">
+      </div>
+      <div class="setting-item">
+        <label>SFX Volume</label>
+        <input type="range" id="sfx-vol" min="0" max="100" value="80">
+      </div>
+      <div class="setting-item">
+        <label>Graphics Quality</label>
+        <select id="gfx-quality">
+          <option value="low">Low (Fastest)</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High (Premium)</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label>Camera Shake</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="cam-shake" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <label>Motion Blur</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="motion-blur" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <label>Show FPS</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="show-fps">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-item danger">
+        <label>Reset Progress</label>
+        <button class="danger-btn" id="reset-btn">RESET ALL DATA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RACE RESULTS -->
+  <div id="screen-results" class="screen hidden">
+    <div class="results-header">
+      <div class="podium-title" id="result-rank-text">RACE COMPLETE!</div>
+      <div class="circuit-name-result" id="result-circuit"></div>
+    </div>
+    <div class="podium-display" id="podium-display"></div>
+    <div class="race-stats-grid" id="race-stats"></div>
+    <div class="reward-section">
+      <div class="coins-earned"><span>🪙</span><span id="coins-earned">+0</span></div>
+    </div>
+    <div class="results-actions">
+      <button class="menu-btn" id="retry-btn">🔄 RETRY</button>
+      <button class="menu-btn primary" id="back-menu-btn">🏠 MAIN MENU</button>
+    </div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div id="countdown-overlay" class="hidden">
+    <div class="countdown-number" id="countdown-num"></div>
+    <div class="race-info-banner">
+      <span id="race-circuit-name"></span>
+      <span id="race-laps-count"></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- IN-GAME HUD -->
+<!-- ═══════════════════════════════════════ -->
+<div id="hud-overlay" class="hidden">
+
+  <!-- Top bar: position, laps, race time -->
+  <div class="hud-top-bar">
+    <div class="hud-position">
+      <span class="pos-label">POS</span>
+      <span class="pos-number" id="hud-pos">1</span>
+      <span class="pos-total" id="hud-pos-total">/12</span>
+    </div>
+    <div class="hud-race-info">
+      <div class="hud-lap-info">
+        <span class="lap-label">LAP</span>
+        <span class="lap-current" id="hud-lap">1</span>
+        <span class="lap-sep">/</span>
+        <span class="lap-total" id="hud-lap-total">5</span>
+      </div>
+      <div class="hud-time" id="hud-race-time">00:00.000</div>
+    </div>
+    <div class="hud-best-lap">
+      <span class="best-label">BEST</span>
+      <span class="best-time" id="hud-best">--:--.---</span>
+    </div>
+  </div>
+
+  <!-- Lap time popup -->
+  <div class="lap-time-popup hidden" id="lap-popup">
+    <span class="lap-popup-label">LAP TIME</span>
+    <span class="lap-popup-time" id="lap-popup-time">0:00.000</span>
+    <span class="lap-popup-delta" id="lap-popup-delta"></span>
+  </div>
+
+  <!-- Mini leaderboard -->
+  <div class="hud-leaderboard" id="hud-leaderboard"></div>
+
+  <!-- Speedometer cluster -->
+  <div class="hud-bottom-cluster">
+    <div class="hud-gear-display" id="hud-gear">1</div>
+    <div class="hud-speedo-wrap">
+      <div class="hud-speed-digital">
+        <span class="speed-value" id="hud-speed">0</span>
+        <span class="speed-unit">KM/H</span>
+      </div>
+      <div class="hud-rpm-bar-wrap">
+        <div class="rpm-label">RPM</div>
+        <div class="hud-rpm-bar"><div class="hud-rpm-fill" id="hud-rpm-fill"></div></div>
+        <div class="rpm-value" id="hud-rpm">0</div>
+      </div>
+    </div>
+    <div class="minimap-container">
+      <canvas id="minimap-canvas" width="120" height="120"></canvas>
+      <div class="minimap-label" id="minimap-circuit-label">CIRCUIT</div>
+    </div>
+  </div>
+
+  <!-- Touch controls -->
+  <div id="touch-controls">
+    <div class="touch-left">
+      <button class="touch-btn steer-btn" id="btn-left" data-control="left">◄</button>
+      <button class="touch-btn steer-btn" id="btn-right" data-control="right">►</button>
+    </div>
+    <div class="touch-right">
+      <button class="touch-btn throttle-btn" id="btn-throttle" data-control="throttle">GAS</button>
+      <button class="touch-btn brake-btn" id="btn-brake" data-control="brake">BRAKE</button>
+    </div>
+    <button class="pause-btn" id="pause-btn">⏸</button>
+  </div>
+
+  <!-- Weather indicator -->
+  <div class="weather-indicator" id="weather-indicator">☀️</div>
+
+  <!-- FPS counter -->
+  <div class="fps-counter hidden" id="fps-counter">60 FPS</div>
+
+  <!-- Pause Menu -->
+  <div class="pause-menu hidden" id="pause-menu">
+    <div class="pause-panel">
+      <div class="pause-title">PAUSED</div>
+      <button class="pause-option" id="resume-btn">▶ RESUME</button>
+      <button class="pause-option" id="restart-race-btn">↺ RESTART</button>
+      <button class="pause-option danger" id="quit-race-btn">✕ QUIT RACE</button>
+    </div>
+  </div>
+
+  <!-- Wrong way warning -->
+  <div class="wrong-way-warning hidden" id="wrong-way">WRONG WAY!</div>
+
+  <!-- Flag notifications -->
+  <div class="flag-notification hidden" id="flag-notif"></div>
+
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/track.js"></script>
+<script src="js/bike.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/weather.js"></script>
+<script src="js/hud.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/game.js"></script>
+
+</body>
+</html>
